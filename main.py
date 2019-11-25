@@ -25,8 +25,8 @@ game = Game(deck)
 
 game.create_pile()
 
-plr = Player()
-plr.draw_cards(game, 7)
+plr = Player(game)
+plr.draw_cards(7)
 print("-" * 75)
 print("TOP CARD:")
 print("-" * 75)
@@ -43,4 +43,4 @@ print("TEST:")
 print("-" * 75)
 for card in plr.hand:
     print(format_card(card))
-    plr.place_card(card, game) 
+    plr.place_card(card) 
