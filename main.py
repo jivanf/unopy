@@ -1,6 +1,7 @@
 import random
 from game import Game
 from player import Player
+from aiplayer import AIPlayer
 from action_card import ActionCard
 from normal_card import NormalCard
 from functions import format_card
@@ -25,8 +26,9 @@ game = Game(deck)
 
 game.create_pile()
 
-plr = Player(game)
-plr.draw_cards(7)
+ai_plr = AIPlayer(game)
+print("Bob the Ro-bob is playing!")
+ai_plr.draw_cards(7)
 print("-" * 75)
 print("TOP CARD:")
 print("-" * 75)
@@ -35,12 +37,22 @@ print(format_card(game.pile[-1]))
 print("-" * 75)
 print("CURRENT HAND:")
 print("-" * 75)
-for card in plr.hand:
+for card in ai_plr.hand:
     print(format_card(card))
 
 print("-" * 75)
 print("TEST:")
 print("-" * 75)
-for card in plr.hand:
+ai_plr.play() 
+
+print("-" * 75)
+print("PILE:")
+print("-" * 75)
+
+for card in game.pile:
     print(format_card(card))
-    plr.place_card(card) 
+print("-" * 75)
+print("HAND:")
+print("-" * 75)
+for card in ai_plr.hand:
+    print(format_card(card))
