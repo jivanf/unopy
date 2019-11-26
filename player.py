@@ -9,6 +9,7 @@ class Player():
 
     def draw_cards(self, amount):
         self.hand += self.game.deck[:amount]
+        del self.game.deck[:amount]
 
     def place_card(self, card):
         top_card = self.game.pile[-1]

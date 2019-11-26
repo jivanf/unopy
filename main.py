@@ -32,7 +32,7 @@ ai_plr.draw_cards(7)
 print("-" * 75)
 print("TOP CARD:")
 print("-" * 75)
-print(format_card(game.pile[-1]))
+print(format_card(game.pile[0]))
 
 print("-" * 75)
 print("CURRENT HAND:")
@@ -55,4 +55,10 @@ print("-" * 75)
 print("HAND:")
 print("-" * 75)
 for card in ai_plr.hand:
+    print(format_card(card))
+
+print("-" * 75)
+print("DECK TOP 7 ELEMENTS:")
+print("-" * 75)
+for card in game.deck[:8]:
     print(format_card(card))

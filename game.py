@@ -9,7 +9,7 @@ class Game():
 
     def create_pile(self):
         self.pile = list()
-        top_card = self.deck[0]
+        top_card = self.deck.pop(0)
         if type(top_card) == ActionCard or top_card.color == "Wild":
             print("Unable to put card '{0}' on pile. Returning card and redrawing...".format(format_card(top_card)))
             self.deck += [self.deck.pop(0)]
