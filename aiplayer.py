@@ -10,7 +10,7 @@ class AIPlayer(Player):
 
     def play(self):
         for card in self.hand:
-            top_card = self.game.pile[-1]
+            top_card = self.game.pile[0]
             
             # Remove ANSI codes for comparison 
             top_card_color_text = re.sub(r"\x1b\[[0-9]+m", "", top_card.color)
@@ -18,17 +18,17 @@ class AIPlayer(Player):
 
             if current_card_color_text == "Wild" and current_card_color_text == self.game.declared_color:
                 print("I can place the card {0}!".format(format_card(card)))
-                self.game.pile.append(self.hand.pop(self.hand.index(card)))
+                self.game.pile.insert(self.hand.pop(self.hand.index(card)), 0)
                 return True
 
             if top_card_color_text == "Wild":
                 print("I can place the card {0}!".format(format_card(card)))
-                self.game.pile.append(self.hand.pop(self.hand.index(card)))
+                self.game.pile.insert(self.hand.pop(self.hand.index(card)), 0)
                 return True
 
             if current_card_color_text == top_card_color_text or current_card_color_text == self.game.declared_color:
                 print("I can place the card {0}!".format(format_card(card)))
-                self.game.pile.append(self.hand.pop(self.hand.index(card)))
+                self.game.pile.insert(self.hand.pop(self.hand.index(card)), 0)
                 return True
 
             # Check if an ActionCard can be placed
@@ -36,7 +36,7 @@ class AIPlayer(Player):
                 if type(top_card) == ActionCard:
                     if card.action == top_card.action:
                         print("I can place the card {0}!".format(format_card(card)))
-                        self.game.pile.append(self.hand.pop(self.hand.index(card)))
+                        self.game.pile.insert(self.hand.pop(self.hand.index(card)), 0)
                         return True
 
             # Check if a NormalCard can be placed
@@ -44,7 +44,7 @@ class AIPlayer(Player):
                 if type(top_card) == NormalCard:
                     if card.number == top_card.number:
                         print("I can place the card {0}!".format(format_card(card)))
-                        self.game.pile.append(self.hand.pop(self.hand.index(card)))
+                        self.game.pile.insert(self.hand.pop(self.hand.index(card)), 0)
                         return True
             print("Go draw a card")
             return False
