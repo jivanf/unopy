@@ -26,24 +26,14 @@ game = Game(deck)
 
 game.create_pile()
 
-ai_plr = AIPlayer(game)
-print("Bob the Ro-bob is playing!")
-ai_plr.draw_cards(7)
 print("-" * 75)
 print("TOP CARD:")
 print("-" * 75)
 print(format_card(game.pile[0]))
 
-print("-" * 75)
-print("CURRENT HAND:")
-print("-" * 75)
-for card in ai_plr.hand:
-    print(format_card(card))
-
-print("-" * 75)
-print("TEST:")
-print("-" * 75)
-ai_plr.play() 
+plr = Player(game)
+plr.draw_cards(7)
+plr.play()
 
 print("-" * 75)
 print("PILE:")
@@ -54,7 +44,7 @@ for card in game.pile:
 print("-" * 75)
 print("HAND:")
 print("-" * 75)
-for card in ai_plr.hand:
+for card in plr.hand:
     print(format_card(card))
 
 print("-" * 75)
