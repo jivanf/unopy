@@ -10,6 +10,6 @@ class AIPlayer(Player):
             check = functions.check_if_card_can_be_placed(card, game.pile[0], game.declared_color)
             if check:
                 game.pile.insert(0, self.hand.pop(self.hand.index(card)))
-                print("I can place a {0}!".format(functions.format_card(card)))
-                break
-            print("I can't place a {0} <:(".format(functions.format_card(card)))
+                print("I'm placing a {0}".format(functions.format_card(card)))
+                return
+        print("I can't place any cards, I'm gonna draw...")
