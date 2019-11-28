@@ -1,6 +1,6 @@
 import random
 from game import Game
-from player import Player
+from humanplayer import HumanPlayer
 from aiplayer import AIPlayer
 from action_card import ActionCard
 from normal_card import NormalCard
@@ -31,7 +31,7 @@ print("TOP CARD:")
 print("-" * 75)
 print(format_card(game.pile[0]))
 
-plr = Player()
+plr = HumanPlayer()
 game.add_player(plr)
 
 plr.draw_cards(7, game)
