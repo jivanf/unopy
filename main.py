@@ -35,104 +35,105 @@ result = None
 if name == "nt": result = system("cls")
 else: result == system("clear")
 
-while True:
-    human_player_count = None
-    try:
-        human_player_count = int(input("How many people are going to play? (Up to 5 players, including AI)\n"))
-    except ValueError:
-        print("{0} is not a number...\n".format(human_player_count))
-        continue
-    
-    if human_player_count < 0:
-        print("The number you entered ({0}) is a negative number. I can't use those.\n".format(human_player_count))
-        continue
+try:
+    while True:
+        human_player_count = None
+        try:
+            human_player_count = int(input("How many people are going to play? (Up to 5 players, including AI)\n"))
+        except ValueError:
+            print("{0} is not a number...\n".format(human_player_count))
+            continue
+        
+        if human_player_count < 0:
+            print("The number you entered ({0}) is a negative number. I can't use those.\n".format(human_player_count))
+            continue
 
-    if human_player_count > 5:
-        print("The number you entered ({0}) is too big.\n".format(human_player_count))
-        continue
+        if human_player_count > 5:
+            print("The number you entered ({0}) is too big.\n".format(human_player_count))
+            continue
 
-    ai_player_count = None 
-    try:
-        ai_player_count = int(input("How many AI players do you want? (Up to 5 players, including normal players)\n"))
-    except ValueError:
-        print("{0} is not a number...\n".format(ai_player_count))
-        continue
+        ai_player_count = None 
+        try:
+            ai_player_count = int(input("How many AI players do you want? (Up to 5 players, including normal players)\n"))
+        except ValueError:
+            print("{0} is not a number...\n".format(ai_player_count))
+            continue
 
-    if human_player_count + ai_player_count > 5:
-        print("The amount of real players and AI players is too big.\n")
-        continue
+        if human_player_count + ai_player_count > 5:
+            print("The amount of real players and AI players is too big.\n")
+            continue
 
-    elif human_player_count + ai_player_count == 0:
-        print("Do you really want to start a game with 0 players? I don't think so.\n")
-        continue
+        elif human_player_count + ai_player_count == 0:
+            print("Do you really want to start a game with 0 players? I don't think so.\n")
+            continue
 
-    elif human_player_count + ai_player_count < 0:
-        print("The amount of real players and AI players is a negative number. ???\n")
-        continue
+        elif human_player_count + ai_player_count < 0:
+            print("The amount of real players and AI players is a negative number. ???\n")
+            continue
 
-    for i in range(0, human_player_count):
-        human_player = HumanPlayer()
-        human_player.draw_cards(7, game)
-        game.add_player(human_player)
-    
-    for i in range(0, ai_player_count):
-        ai_player = AIPlayer()
-        ai_player.draw_cards(7, game)
-        game.add_player(ai_player)
+        for i in range(0, human_player_count):
+            human_player = HumanPlayer()
+            human_player.draw_cards(7, game)
+            game.add_player(human_player)
+        
+        for i in range(0, ai_player_count):
+            ai_player = AIPlayer()
+            ai_player.draw_cards(7, game)
+            game.add_player(ai_player)
 
-    break
+        break
 
-turn = 0
-while True:
-    plr = game.players[turn]
-    print("-" * 75)
-    print("TOP CARD:")
-    print("-" * 75)
-    print(format_card(game.pile[0]))
-
-    plr.play(game)
-    print("-" * 75)
-    print("PILE:")
-    print("-" * 75)
-
-    for card in game.pile:
-        print(format_card(card))
-    print("-" * 75)
-
-    if type(plr) == HumanPlayer:
+    turn = 0
+    while True:
+        plr = game.players[turn]
         print("-" * 75)
-        print("HAND:")
+        print("TOP CARD:")
         print("-" * 75)
-        for card in plr.hand:
+        print(format_card(game.pile[0]))
+
+        plr.play(game)
+        print("-" * 75)
+        print("PILE:")
+        print("-" * 75)
+
+        for card in game.pile:
             print(format_card(card))
         print("-" * 75)
 
-    enter_message = "Press Enter to end turn"
-    next_player = None
-    try:
-        next_player = game.players[turn + 1]
-    except IndexError:
-        next_player = game.players[0]
+        if type(plr) == HumanPlayer:
+            print("-" * 75)
+            print("HAND:")
+            print("-" * 75)
+            for card in plr.hand:
+                print(format_card(card))
+            print("-" * 75)
 
-    if type(next_player) == AIPlayer:
-        enter_message += " (Next player is an AI)"
-    input(enter_message)
+        enter_message = "Press Enter to end turn\n"
+        next_player = None
+        try:
+            next_player = game.players[turn + 1]
+        except IndexError:
+            next_player = game.players[0]
 
+        if type(next_player) == AIPlayer:
+            enter_message = "Press Enter to end turn (Next player is an AI)\n"
+        input(enter_message)
 
-    for i in reversed(range(1, 6)):
-        if name == "nt":
-            while msvcrt.kbhit():
-                msvcrt.getch()
+        for i in reversed(range(1, 6)):
+            if name == "nt":
+                while msvcrt.kbhit():
+                    msvcrt.getch()
+            else:
+                termios.tcflush(sys.stdin, termios.TCIOFLUSH)
+            print("Switching to next player in {0}...".format(str(i)), end="\r")
+            sleep(1)
+
+        if len(game.players) - 1 == turn:
+            turn = 0
         else:
-            termios.tcflush(sys.stdin, termios.TCIOFLUSH)
-        print("Switching to next player in {0}...".format(str(i)), end="\r")
-        sleep(1)
-
-    if len(game.players) - 1 == turn:
-        turn = 0
-    else:
-        turn += 1
-    if name == "nt": result = system("cls")
-    else: result == system("clear")
-
+            turn += 1
+        if name == "nt": result = system("cls")
+        else: result == system("clear")
+except KeyboardInterrupt:
+    print("\nGoodbye!")
 

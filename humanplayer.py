@@ -47,42 +47,46 @@ class HumanPlayer(Player):
                 return "Psst... Try placing a {0}\n".format(", ".join(possible_cards))
 
     def play(self, game):
-        print("-" * 75)
-        print("AVAILABLE CARDS")
-        print("-" * 75)
+        try:
+            print("-" * 75)
+            print("AVAILABLE CARDS")
+            print("-" * 75)
 
-        for i, card in enumerate(self.hand): print("{0}) {1}".format(str(i + 1), functions.format_card(card)))
-        non_integer_count = 0
-        invalid_integer_count = 0
-        card_cant_be_placed_count = 0
-        toggle = 0
-        choice = None
-        while True:
-            if 5 in (non_integer_count, invalid_integer_count, card_cant_be_placed_count): 
-                print("ok")
-                sys.exit()
-            if toggle == 0: choice = input("Choose a card to place (enter the number of the card):\n")
-            elif toggle == 1: choice = input(self.__non_integer_input_message(non_integer_count))
-            elif toggle == 2: choice = input(self.__invalid_integer_input_message(invalid_integer_count))
-            elif toggle == 3: choice = input(self.__card_cant_be_placed_message(card_cant_be_placed_count, game))
-            else: choice == input(self.__invalid_integer_input_message(invalid_integer_count))
+            for i, card in enumerate(self.hand): print("{0}) {1}".format(str(i + 1), functions.format_card(card)))
+            non_integer_count = 0
+            invalid_integer_count = 0
+            card_cant_be_placed_count = 0
+            toggle = 0
+            choice = None
+            while True:
+                if 5 in (non_integer_count, invalid_integer_count, card_cant_be_placed_count): 
+                    print("ok")
+                    sys.exit()
+                if toggle == 0: choice = input("Choose a card to place (enter the number of the card):\n")
+                elif toggle == 1: choice = input(self.__non_integer_input_message(non_integer_count))
+                elif toggle == 2: choice = input(self.__invalid_integer_input_message(invalid_integer_count))
+                elif toggle == 3: choice = input(self.__card_cant_be_placed_message(card_cant_be_placed_count, game))
+                else: choice == input(self.__invalid_integer_input_message(invalid_integer_count))
 
 
-            try:
-                choice = int(choice) - 1
-            except ValueError:
-                non_integer_count += 1
-                toggle = 1
-                continue
+                try:
+                    choice = int(choice) - 1
+                except ValueError:
+                    non_integer_count += 1
+                    toggle = 1
+                    continue
 
-            if not 0 <= choice < len(self.hand):
-                invalid_integer_count += 1
-                toggle = 2
-                continue
-            card = self.hand[choice]
-            if functions.check_if_card_can_be_placed(card, game.pile[0], game.declared_color):
-                game.pile.insert(0, self.hand.pop(choice))
-                break
-            else:
-                card_cant_be_placed_count += 1
-                toggle = 3
+                if not 0 <= choice < len(self.hand):
+                    invalid_integer_count += 1
+                    toggle = 2
+                    continue
+                card = self.hand[choice]
+                if functions.check_if_card_can_be_placed(card, game.pile[0], game.declared_color):
+                    game.pile.insert(0, self.hand.pop(choice))
+                    break
+                else:
+                    card_cant_be_placed_count += 1
+                    toggle = 3
+        except KeyboardInterrupt:
+            print("\nGoodbye!")
+            sys.exit()
