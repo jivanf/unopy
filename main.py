@@ -31,9 +31,11 @@ print("TOP CARD:")
 print("-" * 75)
 print(format_card(game.pile[0]))
 
-plr = Player(game)
-plr.draw_cards(7)
-plr.play()
+plr = Player()
+game.add_player(plr)
+
+plr.draw_cards(7, game)
+plr.play(game)
 
 print("-" * 75)
 print("PILE:")

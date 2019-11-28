@@ -5,9 +5,8 @@ import functions
 import sys
 
 class Player():
-    def __init__(self, game):
+    def __init__(self):
         self.hand = list()
-        self.game = game
 
     def __non_integer_input_message(self, count):
         return {
@@ -22,20 +21,20 @@ class Player():
         return {
             1: "The number you selected is not within the range of your hand size.\n",
             2: "You need to select a number from the list, or else we can't keep playing.\n",
-            3: "Please select a valid number.",
+            3: "Please select a valid number.\n",
             4: "Last chance. Enter a valid number\n",
         }[count]
 
-    def __card_cant_be_placed_message(self, count):
+    def __card_cant_be_placed_message(self, count, game):
         return {
             1: "The card you selected can't be placed. Please try placing another card.\n",
             2: "You can't place this card!\n",
-            3: self.__return_card_suggestions(),
+            3: self.__return_card_suggestions(game),
             4: "Last chance. Enter a valid card or draw one from the deck.\n",
         }[count]
 
-    def __return_card_suggestions(self):
-        possible_cards = [x for x in self.hand if functions.check_if_card_can_be_placed(x, self.game.pile[0])] 
+    def __return_card_suggestions(self, game):
+        possible_cards = [x for x in self.hand if functions.check_if_card_can_be_placed(x, game.pile[0])] 
         if not possible_cards:
             return "You can't place any cards. Try drawing...\n"
         else:
@@ -46,11 +45,11 @@ class Player():
                 possible_cards[-1] = "or a " + possible_cards[-1]
                 return "Psst... Try placing a {0}\n".format(", ".join(possible_cards))
 
-    def draw_cards(self, amount):
-        self.hand += self.game.deck[:amount]
-        del self.game.deck[:amount]
+    def draw_cards(self, amount, game):
+        self.hand += game.deck[:amount]
+        del game.deck[:amount]
 
-    def play(self):
+    def play(self, game):
         print("-" * 75)
         print("AVAILABLE CARDS")
         print("-" * 75)
@@ -68,7 +67,7 @@ class Player():
             if toggle == 0: choice = input("Choose a card to place (enter the number of the card):\n")
             elif toggle == 1: choice = input(self.__non_integer_input_message(non_integer_count))
             elif toggle == 2: choice = input(self.__invalid_integer_input_message(invalid_integer_count))
-            elif toggle == 3: choice = input(self.__card_cant_be_placed_message(card_cant_be_placed_count))
+            elif toggle == 3: choice = input(self.__card_cant_be_placed_message(card_cant_be_placed_count, game))
             else: choice == input(self.__invalid_integer_input_message(invalid_integer_count))
 
 
@@ -84,8 +83,8 @@ class Player():
                 toggle = 2
                 continue
             card = self.hand[choice]
-            if functions.check_if_card_can_be_placed(card, self.game.pile[0], self.game.declared_color):
-                self.game.pile.insert(0, self.hand.pop(choice))
+            if functions.check_if_card_can_be_placed(card, game.pile[0], game.declared_color):
+                game.pile.insert(0, self.hand.pop(choice))
                 break
             else:
                 card_cant_be_placed_count += 1
