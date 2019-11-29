@@ -98,9 +98,11 @@ try:
 
         for card in game.pile:
             print(format_card(card))
-        print("-" * 75)
 
-        if type(plr) == HumanPlayer:
+        if type(plr) == AIPlayer:
+            print("-" * 75)
+
+        else:
             print("-" * 75)
             print("HAND:")
             print("-" * 75)

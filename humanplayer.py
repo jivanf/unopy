@@ -53,6 +53,7 @@ class HumanPlayer(Player):
             print("-" * 75)
 
             for i, card in enumerate(self.hand): print("{0}) {1}".format(str(i + 1), functions.format_card(card)))
+            print("-" * 75)
             non_integer_count = 0
             invalid_integer_count = 0
             card_cant_be_placed_count = 0
@@ -62,13 +63,24 @@ class HumanPlayer(Player):
                 if 5 in (non_integer_count, invalid_integer_count, card_cant_be_placed_count): 
                     print("ok")
                     sys.exit()
-                if toggle == 0: choice = input("Choose a card to place (enter the number of the card):\n")
+                if toggle == 0: choice = input("Choose a card to place (enter the number of the card) or type 'D' to draw a card:\n")
                 elif toggle == 1: choice = input(self.__non_integer_input_message(non_integer_count))
                 elif toggle == 2: choice = input(self.__invalid_integer_input_message(invalid_integer_count))
                 elif toggle == 3: choice = input(self.__card_cant_be_placed_message(card_cant_be_placed_count, game))
                 else: choice == input(self.__invalid_integer_input_message(invalid_integer_count))
 
-
+                if choice.lower() == "d":
+                    self.draw_cards(1, game)
+                    drawn_card = self.hand[-1]
+                    print("-" * 75)
+                    if functions.check_if_card_can_be_placed(drawn_card, game.pile[0], game.declared_color):
+                        place_card = input("You drew a {0} and you can place it or keep it. Do you want to place it? (y/n)\n".format(functions.format_card(drawn_card)))
+                        if place_card.lower() == "y":
+                            game.pile.insert(0, self.hand.pop(-1))
+                        return
+                    else:
+                        print("You drew a {0} but you can't place it".format(functions.format_card(drawn_card)))
+                        break
                 try:
                     choice = int(choice) - 1
                 except ValueError:
