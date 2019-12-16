@@ -23,15 +23,10 @@ wild_actions = ["Wild", "Draw four"]
 
 # Create deck
 deck = [NormalCard(color, num) for num in range(0, 10) for color in colors]
-deck += [NormalCard(color, num) for num in range(1, 10) for color in colors]
-deck += [ActionCard(color, action) for action in actions for color in colors] * 2
-deck += [ActionCard(wild_color, wild_action) for wild_action in wild_actions] * 4
-deck *= 2
-
-deck += [ActionCard("Blue", "Reverse")]
-deck += [ActionCard("Yellow", "Reverse")]
-deck += [ActionCard("Red", "Reverse")]
-deck += [ActionCard("Green", "Reverse")]
+for i in range(1): deck += [NormalCard(color, num) for num in range(1, 10) for color in colors]
+for i in range(2): deck += [ActionCard(color, action) for action in actions for color in colors]
+for i in range(4): deck += [ActionCard(wild_color, wild_action) for wild_action in wild_actions]
+deck += deck[:]
 
 shuffle(deck)
 
