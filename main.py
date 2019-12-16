@@ -30,11 +30,6 @@ deck *= 2
 
 shuffle(deck)
 
-deck.append(ActionCard(wild_color, "Draw four"))
-deck.append(ActionCard(wild_color, "Draw four"))
-deck.append(ActionCard(wild_color, "Draw four"))
-deck.append(ActionCard(wild_color, "Draw four"))
-
 game = Game(deck)
 
 game.create_pile()
@@ -185,7 +180,7 @@ try:
                     else: result == system("clear")
                     continue
 
-                if top_card.action == "Wild Draw four":
+                if top_card.action == "Draw four":
                     plr.draw_cards(4, game)
                     if type(plr) == HumanPlayer:
                         print("Ouch! You gotta draw four cards thanks to a {0}".format(formatted_top_card))
