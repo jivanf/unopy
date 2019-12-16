@@ -1,4 +1,4 @@
-import random
+from random import shuffle
 from game import Game
 from humanplayer import HumanPlayer
 from aiplayer import AIPlayer
@@ -14,17 +14,26 @@ colors = ["\033[31m" + "Red" + "\033[0m",
           "\033[32m" + "Green" + "\033[0m",
           "\033[33m" + "Yellow" + "\033[0m",
           "\033[34m" + "Blue" + "\033[0m"]
-wild_color = "\033[31m" + "W" + "\033[0m" + "\033[32m" + "i" + "\033[0m" + "\033[33m" + "l" + "\033[0m" + "\033[34m" + "d" + "\033[0m"
-actions = ["Block", "Reverse", "Draw two"]
-wild_actions = ["Wild", "Wild Draw Four"]
+wild_color = ("\033[31m" + "W" + "\033[0m" + 
+              "\033[32m" + "i" + "\033[0m" + 
+              "\033[33m" + "l" + "\033[0m" + 
+              "\033[34m" + "d" + "\033[0m")
+actions = ["Skip", "Reverse", "Draw two"]
+wild_actions = ["Wild", "Draw four"]
 
 # Create deck
 deck = [NormalCard(color, num) for num in range(0, 10) for color in colors]
 deck += [NormalCard(color, num) for num in range(1, 10) for color in colors]
 deck += [ActionCard(color, action) for action in actions for color in colors] * 2
 deck += [ActionCard(wild_color, wild_action) for wild_action in wild_actions] * 4
+deck *= 2
 
-random.shuffle(deck)
+shuffle(deck)
+
+deck.append(ActionCard(wild_color, "Draw four"))
+deck.append(ActionCard(wild_color, "Draw four"))
+deck.append(ActionCard(wild_color, "Draw four"))
+deck.append(ActionCard(wild_color, "Draw four"))
 
 game = Game(deck)
 
@@ -32,8 +41,39 @@ game.create_pile()
 
 result = None
 
-if name == "nt": result = system("cls")
-else: result == system("clear")
+direction = 1
+
+def clear_screen(name):
+    if name == "nt": result = system("cls")
+    else: result = system("clear")
+
+def countdown(name):
+    if name == "nt":
+        while msvcrt.kbhit():
+            msvcrt.getwch()
+    else:
+        termios.tcflush(sys.stdin, termios.TCIFLUSH)
+    for i in reversed(range(1, 6)):
+        print("Switching to next player in {0}...".format(str(i)), end="\r")
+        sleep(1)
+
+def return_next_turn(turn, direction, game):
+    if turn + direction > len(game.players) - 1:
+        turn = 0
+    elif turn + direction < 0:
+        turn = len(game.players) - 1
+    else:
+        turn += direction
+    return turn
+
+def display_enter_message(turn, direction, game):
+    enter_message = "Press Enter to end turn\n"
+    next_turn = return_next_turn(turn, direction, game)
+    if type(game.players[next_turn]) == AIPlayer:
+        enter_message = "Press Enter to end turn (Next player is an AI)\n"
+    input(enter_message)
+
+clear_screen(name)
 
 try:
     while True:
@@ -49,7 +89,7 @@ try:
             continue
 
         if human_player_count > 5:
-            print("The number you entered ({0}) is too big.\n".format(human_player_count))
+            prin("The number you entered ({0}) is too big.\n".format(human_player_count))
             continue
 
         ai_player_count = None 
@@ -85,17 +125,97 @@ try:
 
     turn = 0
     while True:
+        if not len(game.deck):
+            print("No more cards left in the deck. Shuffling pile...")
+            game.pile.shuffle()
+            game.deck = game.pile[1:]
+            del game.pile[1:]
+
         plr = game.players[turn]
+        top_card = game.pile[0]
+
+        if plr.uno_calls == 1:
+            print("A player has called out UNO!")
+            plr.uno_calls = 0
+        if plr.uno_calls > 1:
+            print("{0} players have called out UNO!")
+            plr.uno_calls = 0
+
+        if type(top_card) == ActionCard:
+            formatted_top_card = format_card(top_card)
+            if top_card.action == "Reverse":
+                if len(game.players) == 2 and top_card.used == False:
+                    if type(plr) == HumanPlayer:
+                        print("Since this is a two player game and a {0} was used against you, you have been skipped...".format(formatted_top_card))
+
+                    countdown(name)
+                    turn = return_next_turn(turn, direction, game)
+                    top_card.used = True
+
+                    if name == "nt": result = system("cls")
+                    else: result == system("clear")
+                    continue
+                if len(game.players) != 2:
+                    print("A {0} was used so you are next!".format(format_card(top_card)))
+
+            if top_card.used == False:
+                if top_card.action == "Skip":
+                    if type(plr) == HumanPlayer: print("You have been skipped by a {0}!".format(formatted_top_card))
+                    countdown(name)
+                    turn = return_next_turn(turn, direction, game)
+                    top_card.used = True
+
+                    if name == "nt": result = system("cls")
+                    else: result == system("clear")
+                    continue
+
+                if top_card.action == "Draw two":
+                    plr.draw_cards(2, game)
+                    if type(plr) == HumanPlayer:
+                        print("Oops! You have to draw two cards thanks to a {0}".format(formatted_top_card))
+                        print("You drew the cards {0}".format(", ".join([format_card(card) for card in plr.hand[-2:]])))
+                    else: print("Okay, I think I got some nice cards...")
+
+                    display_enter_message(turn, direction, game)
+                    countdown(name)
+                    turn = return_next_turn(turn, direction, game)
+                    top_card.used = True
+
+                    if name == "nt": result = system("cls")
+                    else: result == system("clear")
+                    continue
+
+                if top_card.action == "Wild Draw four":
+                    plr.draw_cards(4, game)
+                    if type(plr) == HumanPlayer:
+                        print("Ouch! You gotta draw four cards thanks to a {0}".format(formatted_top_card))
+                        print("You drew the cards {0}".format(", ".join([format_card(card) for card in plr.hand[-4:]])))
+                    else:
+                        print("Okay...")
+                    display_enter_message(turn, direction, game)
+                    countdown(name)
+                    turn = return_next_turn(turn, direction, game)
+                    top_card.used = True
+
+                    if name == "nt": result = system("cls")
+                    else: result == system("clear")
+                    continue
+
         print("-" * 75)
         print("TOP CARD:")
         print("-" * 75)
-        print(format_card(game.pile[0]))
+        print(format_card(top_card))
+        if top_card.color == wild_color:
+            print("Selected color: {0}".format(game.declared_color))
 
         plr.play(game)
+        if not plr.hand:
+            if type(plr) == HumanPlayer: print("Congratulations! You won! 🎉🎉")
+            else: print("I won! Woohoo! 🎉🎉")
+            sys.exit()
         print("-" * 75)
         print("PILE:")
         print("-" * 75)
-
         for card in game.pile:
             print(format_card(card))
 
@@ -110,32 +230,15 @@ try:
                 print(format_card(card))
             print("-" * 75)
 
-        enter_message = "Press Enter to end turn\n"
-        next_player = None
-        try:
-            next_player = game.players[turn + 1]
-        except IndexError:
-            next_player = game.players[0]
-
-        if type(next_player) == AIPlayer:
-            enter_message = "Press Enter to end turn (Next player is an AI)\n"
-        input(enter_message)
-
-        for i in reversed(range(1, 6)):
-            if name == "nt":
-                while msvcrt.kbhit():
-                    msvcrt.getch()
-            else:
-                termios.tcflush(sys.stdin, termios.TCIOFLUSH)
-            print("Switching to next player in {0}...".format(str(i)), end="\r")
-            sleep(1)
-
-        if len(game.players) - 1 == turn:
-            turn = 0
-        else:
-            turn += 1
+        if type(top_card) == ActionCard:
+            if top_card.action == "Reverse":
+                direction *= -1
+        display_enter_message(turn, direction, game)
+        countdown(name)
+        turn = return_next_turn(turn, direction, game)
         if name == "nt": result = system("cls")
         else: result == system("clear")
+
 except KeyboardInterrupt:
     print("\nGoodbye!")
 
