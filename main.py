@@ -26,6 +26,7 @@ deck = [NormalCard(color, num) for num in range(0, 10) for color in colors]
 for i in range(1): deck += [NormalCard(color, num) for num in range(1, 10) for color in colors]
 for i in range(2): deck += [ActionCard(color, action) for action in actions for color in colors]
 for i in range(4): deck += [ActionCard(wild_color, wild_action) for wild_action in wild_actions]
+for i in range(4): deck += [ActionCard(color, "Reverse") for action in actions for color in colors]
 deck += deck[:]
 
 shuffle(deck)
@@ -227,10 +228,10 @@ try:
             print("-" * 75)
 
         if type(top_card) == ActionCard:
-            if top_card.action == "Reverse":
+            if top_card.action == "Reverse" and top_card.used == False:
                 direction *= -1
-        print(direction)
-        print(turn)
+                top_card.used = True
+
         turn = return_next_turn(turn, direction, game)
         display_enter_message(turn, direction, game)
         countdown(name)
