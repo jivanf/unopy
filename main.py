@@ -28,6 +28,11 @@ deck += [ActionCard(color, action) for action in actions for color in colors] * 
 deck += [ActionCard(wild_color, wild_action) for wild_action in wild_actions] * 4
 deck *= 2
 
+deck += [ActionCard("Blue", "Reverse")]
+deck += [ActionCard("Yellow", "Reverse")]
+deck += [ActionCard("Red", "Reverse")]
+deck += [ActionCard("Green", "Reverse")]
+
 shuffle(deck)
 
 game = Game(deck)
@@ -61,9 +66,8 @@ def return_next_turn(turn, direction, game):
         turn += direction
     return turn
 
-def display_enter_message(turn, direction, game):
+def display_enter_message(next_turn, direction, game):
     enter_message = "Press Enter to end turn\n"
-    next_turn = return_next_turn(turn, direction, game)
     if type(game.players[next_turn]) == AIPlayer:
         enter_message = "Press Enter to end turn (Next player is an AI)\n"
     input(enter_message)
@@ -204,6 +208,8 @@ try:
             print("Selected color: {0}".format(game.declared_color))
 
         plr.play(game)
+        top_card = game.pile[0]
+
         if not plr.hand:
             if type(plr) == HumanPlayer: print("Congratulations! You won! 🎉🎉")
             else: print("I won! Woohoo! 🎉🎉")
@@ -228,9 +234,11 @@ try:
         if type(top_card) == ActionCard:
             if top_card.action == "Reverse":
                 direction *= -1
+        print(direction)
+        print(turn)
+        turn = return_next_turn(turn, direction, game)
         display_enter_message(turn, direction, game)
         countdown(name)
-        turn = return_next_turn(turn, direction, game)
         if name == "nt": result = system("cls")
         else: result == system("clear")
 
