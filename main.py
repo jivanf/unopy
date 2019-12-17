@@ -7,6 +7,7 @@ from normal_card import NormalCard
 from functions import format_card
 from os import system, name
 from time import sleep
+from copy import deepcopy
 if name == "nt": import msvcrt
 else: import sys, termios
 
@@ -26,8 +27,7 @@ deck = [NormalCard(color, num) for num in range(0, 10) for color in colors]
 for i in range(1): deck += [NormalCard(color, num) for num in range(1, 10) for color in colors]
 for i in range(2): deck += [ActionCard(color, action) for action in actions for color in colors]
 for i in range(4): deck += [ActionCard(wild_color, wild_action) for wild_action in wild_actions]
-for i in range(4): deck += [ActionCard(color, "Reverse") for action in actions for color in colors]
-deck += deck[:]
+deck += deepcopy(deck)
 
 shuffle(deck)
 
@@ -205,6 +205,7 @@ try:
 
         plr.play(game)
         top_card = game.pile[0]
+
 
         if not plr.hand:
             if type(plr) == HumanPlayer: print("Congratulations! You won! 🎉🎉")

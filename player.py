@@ -6,4 +6,3 @@ class Player():
     def draw_cards(self, amount, game):
         self.hand += game.deck[:amount]
         del game.deck[:amount]
-
