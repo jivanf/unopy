@@ -64,6 +64,7 @@ def return_next_turn(turn, direction, game):
 
 def display_enter_message(next_turn, direction, game):
     enter_message = "Press Enter to end turn\n"
+    print("Next turn", next_turn)
     if type(game.players[next_turn]) == AIPlayer:
         enter_message = "Press Enter to end turn (Next player is an AI)\n"
     input(enter_message)
@@ -143,8 +144,9 @@ try:
                     if type(plr) == HumanPlayer:
                         print("Since this is a two player game and a {0} was used against you, you have been skipped...".format(formatted_top_card))
 
-                    countdown(name)
                     turn = return_next_turn(turn, direction, game)
+                    display_enter_message(turn, direction, game)
+                    countdown(name)
                     top_card.used = True
 
                     if name == "nt": result = system("cls")
@@ -156,8 +158,10 @@ try:
             if top_card.used == False:
                 if top_card.action == "Skip":
                     if type(plr) == HumanPlayer: print("You have been skipped by a {0}!".format(formatted_top_card))
-                    countdown(name)
+
                     turn = return_next_turn(turn, direction, game)
+                    display_enter_message(turn, direction, game)
+                    countdown(name)
                     top_card.used = True
 
                     if name == "nt": result = system("cls")
@@ -171,9 +175,9 @@ try:
                         print("You drew the cards {0}".format(", ".join([format_card(card) for card in plr.hand[-2:]])))
                     else: print("Okay, I think I got some nice cards...")
 
+                    turn = return_next_turn(turn, direction, game)
                     display_enter_message(turn, direction, game)
                     countdown(name)
-                    turn = return_next_turn(turn, direction, game)
                     top_card.used = True
 
                     if name == "nt": result = system("cls")
@@ -187,9 +191,9 @@ try:
                         print("You drew the cards {0}".format(", ".join([format_card(card) for card in plr.hand[-4:]])))
                     else:
                         print("Okay...")
+                    turn = return_next_turn(turn, direction, game)
                     display_enter_message(turn, direction, game)
                     countdown(name)
-                    turn = return_next_turn(turn, direction, game)
                     top_card.used = True
 
                     if name == "nt": result = system("cls")
@@ -233,6 +237,7 @@ try:
                 direction *= -1
                 top_card.used = True
 
+        print("Current turn", turn)
         turn = return_next_turn(turn, direction, game)
         display_enter_message(turn, direction, game)
         countdown(name)
