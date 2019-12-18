@@ -104,12 +104,12 @@ try:
             print("The amount of real players and AI players is too big.\n")
             continue
 
-        elif human_player_count + ai_player_count == 0:
-            print("Do you really want to start a game with 0 players? I don't think so.\n")
+        if ai_player_count < 0:
+            print("The number you entered ({0}) is a negative number. I can't use those.\n".format(human_player_count))
             continue
 
-        elif human_player_count + ai_player_count < 0:
-            print("The amount of real players and AI players is a negative number. ???\n")
+        elif human_player_count + ai_player_count == 0:
+            print("Do you really want to start a game with 0 players? I don't think so.\n")
             continue
 
         for i in range(0, human_player_count):
