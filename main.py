@@ -109,7 +109,7 @@ try:
 
         for i in range(0, human_player_count):
             human_player = HumanPlayer()
-            human_player.draw_cards(7, game)
+            human_player.draw_cards(2, game)
             game.add_player(human_player)
         
         for i in range(0, ai_player_count):

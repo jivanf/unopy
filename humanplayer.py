@@ -103,6 +103,8 @@ class HumanPlayer(Player):
                     elif toggle == 3: choice = input(self.__card_cant_be_placed_message(card_cant_be_placed_count, game))
                     elif toggle == 4: choice = input(self.__invalid_uno_callout_message(invalid_uno_callout_count))
                     else: choice == input(self.__invalid_integer_input_message(invalid_integer_count))
+                else:
+                    choice = input()
 
                 if choice.lower() == "u":
                     if uno_toggle == True:
@@ -110,6 +112,7 @@ class HumanPlayer(Player):
                     if len(self.hand) == 2:
                         uno_toggle = True
                         print("You have called out UNO! (Other players will see this after you place a valid card)")
+                        continue
                     else:
                         invalid_uno_callout_count += 1
                         toggle = 4
