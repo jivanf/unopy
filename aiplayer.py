@@ -36,7 +36,12 @@ class AIPlayer(Player):
 
                 if card.color == wild_color:
                     hand_colors = [card.color for card in self.hand]
+                    print(hand_colors)
                     max_color = Counter(hand_colors).most_common(1)[0][0]
+
+                    if max_color == wild_color:
+                        max_color = Counter(hand_colors).most_common(2)[1][0]
+
                     game.declared_color = max_color
 
                     print("I'm placing a {0} and I'm gonna choose the color {1}".format(functions.format_card(card), max_color))
