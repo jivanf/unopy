@@ -97,6 +97,10 @@ class HumanPlayer(Player):
             toggle = 0
             uno_toggle = False
             choice = None
+            wild_color = ("\033[31m" + "W" + "\033[0m" + 
+                          "\033[32m" + "i" + "\033[0m" + 
+                          "\033[33m" + "l" + "\033[0m" + 
+                          "\033[34m" + "d" + "\033[0m")
 
             while True:
                 if 5 in (non_integer_count, invalid_integer_count, card_cant_be_placed_count, invalid_uno_callout_count): 
@@ -144,13 +148,15 @@ class HumanPlayer(Player):
                                             "Do you want to place it? (y/n)\n").format(functions.format_card(drawn_card)))
 
                         if place_card.lower() == "y":
-                            # TODO: Ask for a color if the card placed is a wild
                             game.pile.insert(0, self.hand.pop(-1))
+
+                            if drawn_card.color == wild_color:
+                                self.set_declared_color(game)
                         return
 
                     else:
                         print("You drew a {0} but you can't place it".format(functions.format_card(drawn_card)))
-                        break
+                        return
                 try:
                     choice = int(choice) - 1
 
@@ -172,7 +178,7 @@ class HumanPlayer(Player):
                         if uno_toggle == False:
                             self.draw_cards(2, game)
                             print("You forgot to call out UNO! You got the cards {0}".format(" and ".join([functions.format_card(card) for card in self.hand[-2:]])))
-                            break
+                            return
 
                         else:
                             for player in game.players:
@@ -184,14 +190,9 @@ class HumanPlayer(Player):
 
                     game.pile.insert(0, self.hand.pop(choice))
 
-                    wild_color = ("\033[31m" + "W" + "\033[0m" + 
-                                  "\033[32m" + "i" + "\033[0m" + 
-                                  "\033[33m" + "l" + "\033[0m" + 
-                                  "\033[34m" + "d" + "\033[0m")
-
                     if card.color == wild_color:
                         self.set_declared_color(game)
-                    break
+                    return
 
                 else:
                     card_cant_be_placed_count += 1

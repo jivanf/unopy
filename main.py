@@ -133,7 +133,7 @@ try:
             else:
                 human_player = HumanPlayer(player_name)
 
-            human_player.draw_cards(2, game)
+            human_player.draw_cards(7, game)
             game.add_player(human_player)
         break
 
