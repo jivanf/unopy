@@ -70,14 +70,14 @@ def display_enter_message(next_turn, direction, game):
         enter_message = "Press Enter to end turn (Next player is an AI)\n"
     input(enter_message)
 
-clear_screen(name)
+clear_screen()
 
 try:
     while True:
         human_player_count = None
 
         try:
-            human_player_count = int(input("How many people are going to play? (Up to 5 players, including AI)\n"))
+            human_player_count = int(input("How many people are going to play? (Up to 10 players, including AI)\n"))
 
         except ValueError:
             print("{0} is not a number...\n".format(human_player_count))
@@ -87,20 +87,20 @@ try:
             print("The number you entered ({0}) is a negative number. I can't use those.\n".format(human_player_count))
             continue
 
-        if human_player_count > 5:
-            prin("The number you entered ({0}) is too big.\n".format(human_player_count))
+        if human_player_count > 10:
+            print("The number you entered ({0}) is too big.\n".format(human_player_count))
             continue
 
         ai_player_count = None 
 
         try:
-            ai_player_count = int(input("How many AI players do you want? (Up to 5 players, including normal players)\n"))
+            ai_player_count = int(input("How many AI players do you want? (Up to 10 players, including normal players)\n"))
 
         except ValueError:
             print("{0} is not a number...\n".format(ai_player_count))
             continue
 
-        if human_player_count + ai_player_count > 5:
+        if human_player_count + ai_player_count > 10:
             print("The amount of real players and AI players is too big.\n")
             continue
 
