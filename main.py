@@ -15,10 +15,12 @@ colors = ["\033[31m" + "Red" + "\033[0m",
           "\033[32m" + "Green" + "\033[0m",
           "\033[33m" + "Yellow" + "\033[0m",
           "\033[34m" + "Blue" + "\033[0m"]
+
 wild_color = ("\033[31m" + "W" + "\033[0m" + 
               "\033[32m" + "i" + "\033[0m" + 
               "\033[33m" + "l" + "\033[0m" + 
               "\033[34m" + "d" + "\033[0m")
+
 actions = ["Skip", "Reverse", "Draw two"]
 wild_actions = ["Wild", "Draw four"]
 
@@ -32,14 +34,13 @@ deck += deepcopy(deck)
 shuffle(deck)
 
 game = Game(deck)
-
 game.create_pile()
 
 result = None
 
 direction = 1
 
-def clear_screen(name):
+def clear_screen():
     if name == "nt": result = system("cls")
     else: result = system("clear")
 
@@ -74,8 +75,10 @@ clear_screen(name)
 try:
     while True:
         human_player_count = None
+
         try:
             human_player_count = int(input("How many people are going to play? (Up to 5 players, including AI)\n"))
+
         except ValueError:
             print("{0} is not a number...\n".format(human_player_count))
             continue
@@ -89,8 +92,10 @@ try:
             continue
 
         ai_player_count = None 
+
         try:
             ai_player_count = int(input("How many AI players do you want? (Up to 5 players, including normal players)\n"))
+
         except ValueError:
             print("{0} is not a number...\n".format(ai_player_count))
             continue
@@ -120,6 +125,7 @@ try:
         break
 
     turn = 0
+
     while True:
         if not len(game.deck):
             print("No more cards left in the deck. Shuffling pile...")
@@ -133,6 +139,7 @@ try:
         if plr.uno_calls == 1:
             print("A player has called out UNO!")
             plr.uno_calls = 0
+
         if plr.uno_calls > 1:
             print("{0} players have called out UNO!")
             plr.uno_calls = 0
@@ -141,17 +148,18 @@ try:
             formatted_top_card = format_card(top_card)
             if top_card.action == "Reverse":
                 if len(game.players) == 2 and top_card.used == False:
-                    if type(plr) == HumanPlayer:
-                        print("Since this is a two player game and a {0} was used against you, you have been skipped...".format(formatted_top_card))
+                    if type(plr) == HumanPlayer: print(("Since this is a two player game and a "
+                                                        "{0} was used against you, " 
+                                                        "you have been skipped...").format(formatted_top_card))
 
                     turn = return_next_turn(turn, direction, game)
                     display_enter_message(turn, direction, game)
                     countdown(name)
-                    top_card.used = True
+                    clear_screen()
 
-                    if name == "nt": result = system("cls")
-                    else: result == system("clear")
+                    top_card.used = True
                     continue
+
                 if len(game.players) != 2:
                     print("A {0} was used so you are next!".format(format_card(top_card)))
 
@@ -162,10 +170,9 @@ try:
                     turn = return_next_turn(turn, direction, game)
                     display_enter_message(turn, direction, game)
                     countdown(name)
-                    top_card.used = True
+                    clear_screen()
 
-                    if name == "nt": result = system("cls")
-                    else: result == system("clear")
+                    top_card.used = True
                     continue
 
                 if top_card.action == "Draw two":
@@ -178,10 +185,9 @@ try:
                     turn = return_next_turn(turn, direction, game)
                     display_enter_message(turn, direction, game)
                     countdown(name)
+                    clear_screen()
+                    
                     top_card.used = True
-
-                    if name == "nt": result = system("cls")
-                    else: result == system("clear")
                     continue
 
                 if top_card.action == "Draw four":
@@ -191,13 +197,13 @@ try:
                         print("You drew the cards {0}".format(", ".join([format_card(card) for card in plr.hand[-4:]])))
                     else:
                         print("Okay...")
+
                     turn = return_next_turn(turn, direction, game)
                     display_enter_message(turn, direction, game)
                     countdown(name)
+                    clear_screen()
+                    
                     top_card.used = True
-
-                    if name == "nt": result = system("cls")
-                    else: result == system("clear")
                     continue
 
         print("-" * 75)
@@ -210,11 +216,11 @@ try:
         plr.play(game)
         top_card = game.pile[0]
 
-
         if not plr.hand:
             if type(plr) == HumanPlayer: print("Congratulations! You won! 🎉🎉")
             else: print("I won! Woohoo! 🎉🎉")
             sys.exit()
+
         print("-" * 75)
         print("PILE:")
         print("-" * 75)
@@ -237,13 +243,10 @@ try:
                 direction *= -1
                 top_card.used = True
 
-        print("Current turn", turn)
         turn = return_next_turn(turn, direction, game)
         display_enter_message(turn, direction, game)
         countdown(name)
-        if name == "nt": result = system("cls")
-        else: result == system("clear")
+        clear_screen()
 
 except KeyboardInterrupt:
     print("\nGoodbye!")
-

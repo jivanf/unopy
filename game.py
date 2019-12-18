@@ -14,6 +14,7 @@ class Game():
         if type(top_card) == ActionCard:
             self.deck += [self.deck.pop(0)]
             self.create_pile()
+
         else:
             self.pile.append(top_card)
 

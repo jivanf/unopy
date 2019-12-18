@@ -5,6 +5,7 @@ import re
 def format_card(card):
     if type(card) == NormalCard:
         return "{0} {1}".format(card.color, card.number)
+
     else:
         return "{0} {1}".format(card.color, card.action)
 
@@ -15,6 +16,7 @@ def check_if_card_can_be_placed(card_to_place, card_placed, declared_color):
     card_to_place_color_text = remove_ansii_code(card_to_place.color) 
     card_placed_color_text = remove_ansii_code(card_placed.color) 
     declared_color_text = None
+
     if declared_color is not None: declared_color_text = remove_ansii_code(declared_color)
     
     if card_to_place_color_text == "Wild":
