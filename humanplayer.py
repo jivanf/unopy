@@ -6,8 +6,8 @@ from normal_card import NormalCard
 from player import Player
 
 class HumanPlayer(Player):
-    def __init__(self):
-        Player.__init__(self)
+    def __init__(self, name):
+        Player.__init__(self, name)
 
     def __non_integer_input_message(self, count):
         return {
@@ -144,6 +144,7 @@ class HumanPlayer(Player):
                                             "Do you want to place it? (y/n)\n").format(functions.format_card(drawn_card)))
 
                         if place_card.lower() == "y":
+                            # TODO: Ask for a color if the card placed is a wild
                             game.pile.insert(0, self.hand.pop(-1))
                         return
 
@@ -179,7 +180,7 @@ class HumanPlayer(Player):
                                     continue
 
                                 else:
-                                    player.uno_calls += 1 
+                                    player.uno_calls.append(self.name)
 
                     game.pile.insert(0, self.hand.pop(choice))
 

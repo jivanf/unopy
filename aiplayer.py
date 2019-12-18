@@ -4,8 +4,8 @@ from random import randint
 from collections import Counter
 
 class AIPlayer(Player):
-    def __init__(self):
-        Player.__init__(self)
+    def __init__(self, name):
+        Player.__init__(self, name)
 
     def play(self, game):
         wild_color = ("\033[31m" + "W" + "\033[0m" + 
@@ -26,7 +26,7 @@ class AIPlayer(Player):
                                 continue
 
                             else:
-                                player.uno_calls += 1 
+                                player.uno_calls.append(self.name) 
 
                     else:
                         print("Oops! I forgot to call out UNO...")

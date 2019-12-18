@@ -64,11 +64,8 @@ def return_next_turn(turn, direction, game):
     return turn
 
 def display_enter_message(next_turn, direction, game):
-    enter_message = "Press Enter to end turn\n"
-    print("Next turn", next_turn)
-    if type(game.players[next_turn]) == AIPlayer:
-        enter_message = "Press Enter to end turn (Next player is an AI)\n"
-    input(enter_message)
+    next_player = game.players[next_turn]
+    input("Press Enter to end turn (Next player is {0})\n".format(next_player.name))
 
 clear_screen()
 
@@ -77,7 +74,7 @@ try:
         human_player_count = None
 
         try:
-            human_player_count = int(input("How many people are going to play? (Up to 10 players, including AI)\n"))
+            human_player_count = int(input("How many people are going to play? (Up to 10 players, including bots)\n"))
 
         except ValueError:
             print("{0} is not a number...\n".format(human_player_count))
@@ -94,14 +91,14 @@ try:
         ai_player_count = None 
 
         try:
-            ai_player_count = int(input("How many AI players do you want? (Up to 10 players, including normal players)\n"))
+            ai_player_count = int(input("How many AI players do you want? (Up to 10 players, including human players)\n"))
 
         except ValueError:
             print("{0} is not a number...\n".format(ai_player_count))
             continue
 
         if human_player_count + ai_player_count > 10:
-            print("The amount of real players and AI players is too big.\n")
+            print("The amount of human players and AI bots is too big.\n")
             continue
 
         if ai_player_count < 0:
@@ -112,19 +109,40 @@ try:
             print("Do you really want to start a game with 0 players? I don't think so.\n")
             continue
 
+        for i in range(0, ai_player_count):
+            bot_name = "Bot{0}".format(i + 1)
+            bot_player = AIPlayer(bot_name)
+            bot_player.draw_cards(7, game)
+            game.add_player(bot_player)
+
         for i in range(0, human_player_count):
-            human_player = HumanPlayer()
+            human_player = None
+            player_name = input("Player {0}'s name? Default is Player{0}: ".format(i + 1))
+            
+            if player_name in [player.name for player in game.players]:
+                while True:
+                    player_name = input("That name is already being used. Please use a different name: ")
+                    if player_name in [player.name for player in game.players]:
+                        continue
+                    break
+
+            if not player_name:
+                default_name = "Player{0}".format(i + 1)
+                human_player = HumanPlayer(default_name)
+
+            else:
+                human_player = HumanPlayer(player_name)
+
             human_player.draw_cards(2, game)
             game.add_player(human_player)
-        
-        for i in range(0, ai_player_count):
-            ai_player = AIPlayer()
-            ai_player.draw_cards(7, game)
-            game.add_player(ai_player)
-
         break
 
     turn = 0
+
+    shuffle(game.players)
+
+    for i in game.players:
+        print(i.name)
 
     while True:
         if not len(game.deck):
@@ -133,22 +151,29 @@ try:
             game.deck = game.pile[1:]
             del game.pile[1:]
 
-        plr = game.players[turn]
+        player = game.players[turn]
         top_card = game.pile[0]
 
-        if plr.uno_calls == 1:
-            print("A player has called out UNO!")
-            plr.uno_calls = 0
+        if len(player.uno_calls) == 1:
+            print("{0} has called out UNO!".format(player.uno_calls[0]))
+            player.uno_calls = list()
 
-        if plr.uno_calls > 1:
-            print("{0} players have called out UNO!")
-            plr.uno_calls = 0
+        if len(player.uno_calls) > 1:
+            message = ""
+            for uno_player in player.uno_calls:
+                if player.uno_calls[-2] == uno_player:
+                    message += "{0} and {1}".format(uno_player, player.uno_calls[-1])
+                    break
+                message += "{0}, "
+            message += "have called out UNO!"
+            
+            print(message)
 
         if type(top_card) == ActionCard:
             formatted_top_card = format_card(top_card)
             if top_card.action == "Reverse":
                 if len(game.players) == 2 and top_card.used == False:
-                    if type(plr) == HumanPlayer: print(("Since this is a two player game and a "
+                    if type(player) == HumanPlayer: print(("Since this is a two player game and a "
                                                         "{0} was used against you, " 
                                                         "you have been skipped...").format(formatted_top_card))
 
@@ -165,7 +190,7 @@ try:
 
             if top_card.used == False:
                 if top_card.action == "Skip":
-                    if type(plr) == HumanPlayer: print("You have been skipped by a {0}!".format(formatted_top_card))
+                    if type(player) == HumanPlayer: print("You have been skipped by a {0}!".format(formatted_top_card))
 
                     turn = return_next_turn(turn, direction, game)
                     display_enter_message(turn, direction, game)
@@ -176,10 +201,10 @@ try:
                     continue
 
                 if top_card.action == "Draw two":
-                    plr.draw_cards(2, game)
-                    if type(plr) == HumanPlayer:
+                    player.draw_cards(2, game)
+                    if type(player) == HumanPlayer:
                         print("Oops! You have to draw two cards thanks to a {0}".format(formatted_top_card))
-                        print("You drew the cards {0}".format(", ".join([format_card(card) for card in plr.hand[-2:]])))
+                        print("You drew the cards {0}".format(", ".join([format_card(card) for card in player.hand[-2:]])))
                     else: print("Okay, I think I got some nice cards...")
 
                     turn = return_next_turn(turn, direction, game)
@@ -191,10 +216,10 @@ try:
                     continue
 
                 if top_card.action == "Draw four":
-                    plr.draw_cards(4, game)
-                    if type(plr) == HumanPlayer:
+                    player.draw_cards(4, game)
+                    if type(player) == HumanPlayer:
                         print("Ouch! You gotta draw four cards thanks to a {0}".format(formatted_top_card))
-                        print("You drew the cards {0}".format(", ".join([format_card(card) for card in plr.hand[-4:]])))
+                        print("You drew the cards {0}".format(", ".join([format_card(card) for card in player.hand[-4:]])))
                     else:
                         print("Okay...")
 
@@ -213,11 +238,11 @@ try:
         if top_card.color == wild_color:
             print("Selected color: {0}".format(game.declared_color))
 
-        plr.play(game)
+        player.play(game)
         top_card = game.pile[0]
 
-        if not plr.hand:
-            if type(plr) == HumanPlayer: print("Congratulations! You won! 🎉🎉")
+        if not player.hand:
+            if type(player) == HumanPlayer: print("Congratulations! You won! 🎉🎉")
             else: print("I won! Woohoo! 🎉🎉")
             sys.exit()
 
@@ -227,14 +252,14 @@ try:
         for card in game.pile:
             print(format_card(card))
 
-        if type(plr) == AIPlayer:
+        if type(player) == AIPlayer:
             print("-" * 75)
 
         else:
             print("-" * 75)
             print("HAND:")
             print("-" * 75)
-            for card in plr.hand:
+            for card in player.hand:
                 print(format_card(card))
             print("-" * 75)
 
