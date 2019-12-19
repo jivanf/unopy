@@ -5,7 +5,7 @@ from aiplayer import AIPlayer
 from action_card import ActionCard
 from normal_card import NormalCard
 from functions import format_card
-from os import system, name
+from os import system, name, get_terminal_size
 from time import sleep
 from copy import deepcopy
 if name == "nt": import msvcrt
@@ -28,6 +28,7 @@ wild_actions = ["Wild", "Draw four"]
 deck = [NormalCard(color, num) for num in range(0, 10) for color in colors]
 for i in range(1): deck += [NormalCard(color, num) for num in range(1, 10) for color in colors]
 for i in range(2): deck += [ActionCard(color, action) for action in actions for color in colors]
+for i in range(8): deck += [ActionCard(color, "Reverse") for action in actions for color in colors]
 for i in range(4): deck += [ActionCard(wild_color, wild_action) for wild_action in wild_actions]
 deck += deepcopy(deck)
 
@@ -66,6 +67,28 @@ def return_next_turn(turn, direction, game):
 def display_enter_message(next_turn, direction, game):
     next_player = game.players[next_turn]
     input("Press Enter to end turn (Next player is {0})\n".format(next_player.name))
+
+def display_player_order(game, direction):
+    terminal_size = get_terminal_size()
+    players = game.players
+    message_buffer = ""
+    message = ""
+    print("\n" * ((terminal_size.lines - 1) // 2), "PLAYER ORDER".center(terminal_size.columns - 1))
+    
+    if direction == -1:
+        players = list(reversed(game.players))
+
+    for player in players:
+        if players[-1] == player:
+            message_buffer += player.name
+        else:
+            message_buffer += player.name + " -> "
+
+    for char in message_buffer:
+        message += char
+        print(message.center(terminal_size.columns - 1), end="\r")
+        sleep(0.1)
+    sleep(4)
 
 clear_screen()
 
@@ -140,9 +163,9 @@ try:
     turn = 0
 
     shuffle(game.players)
-
-    for i in game.players:
-        print(i.name)
+    clear_screen()
+    display_player_order(game, direction)
+    clear_screen()
 
     while True:
         if not len(game.deck):
@@ -164,6 +187,7 @@ try:
                 if player.uno_calls[-2] == uno_player:
                     message += "{0} and {1}".format(uno_player, player.uno_calls[-1])
                     break
+            # TODO: fix typos
                 message += "{0}, "
             message += "have called out UNO!"
             
@@ -182,11 +206,15 @@ try:
                     countdown(name)
                     clear_screen()
 
-                    top_card.used = True
-                    continue
 
-                if len(game.players) != 2:
+                if len(game.players) != 2 and top_card.used == False:
+                    clear_screen()
+                    display_player_order(game, direction)
+                    clear_screen()
                     print("A {0} was used so you are next!".format(format_card(top_card)))
+
+                top_card.used = True
+                continue
 
             if top_card.used == False:
                 if top_card.action == "Skip":
@@ -246,6 +274,7 @@ try:
             else: print("I won! Woohoo! 🎉🎉")
             sys.exit()
 
+        # TODO: print only top 20 cards
         print("-" * 75)
         print("PILE:")
         print("-" * 75)
@@ -266,7 +295,6 @@ try:
         if type(top_card) == ActionCard:
             if top_card.action == "Reverse" and top_card.used == False:
                 direction *= -1
-                top_card.used = True
 
         turn = return_next_turn(turn, direction, game)
         display_enter_message(turn, direction, game)
