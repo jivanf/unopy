@@ -256,9 +256,9 @@ try:
                 continue
 
         # TODO: decrease dash length
-        print("-" * 75)
+        print("-" * 60)
         print("TOP CARD:")
-        print("-" * 75)
+        print("-" * 60)
         print(format_card(top_card))
         if top_card.color == wild_color:
             print("Selected color: {0}".format(game.declared_color))
@@ -272,22 +272,22 @@ try:
             sys.exit()
 
         # TODO: print only top 20 cards
-        print("-" * 75)
+        print("-" * 60)
         print("PILE:")
-        print("-" * 75)
+        print("-" * 60)
         for card in game.pile:
             print(format_card(card))
 
         if type(player) == AIPlayer:
-            print("-" * 75)
+            print("-" * 60)
 
         else:
-            print("-" * 75)
+            print("-" * 60)
             print("HAND:")
-            print("-" * 75)
+            print("-" * 60)
             for card in player.hand:
                 print(format_card(card))
-            print("-" * 75)
+            print("-" * 60)
 
         if type(top_card) == ActionCard:
             if top_card.action == "Reverse" and top_card.used == False:

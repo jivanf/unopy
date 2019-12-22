@@ -82,12 +82,12 @@ class HumanPlayer(Player):
 
     def play(self, game):
         try:
-            print("-" * 75)
+            print("-" * 60)
             print("AVAILABLE CARDS")
-            print("-" * 75)
+            print("-" * 60)
 
             for i, card in enumerate(self.hand): print("{0}) {1}".format(str(i + 1), functions.format_card(card)))
-            print("-" * 75)
+            print("-" * 60)
 
             non_integer_count = 0
             invalid_integer_count = 0
@@ -107,8 +107,8 @@ class HumanPlayer(Player):
                     sys.exit()
 
                 if not uno_toggle:
-                    if toggle == 0: choice = input(("Choose a card to place (enter the number of the card), " +
-                                                    "type 'D' to draw a card or\n'U' to call out 'UNO' " +
+                    if toggle == 0: choice = input(("Choose a card to place (enter the number of the card),\n" +
+                                                    "type 'D' to draw a card or 'U' to call out 'UNO'\n" +
                                                     "(you must say it before you place your next-to-last card):\n"))
                     elif toggle == 1: choice = input(self.__non_integer_input_message(non_integer_count))
                     elif toggle == 2: choice = input(self.__invalid_integer_input_message(invalid_integer_count))
@@ -141,7 +141,7 @@ class HumanPlayer(Player):
                     self.draw_cards(1, game)
                     drawn_card = self.hand[-1]
 
-                    print("-" * 75)
+                    print("-" * 60)
                     if functions.check_if_card_can_be_placed(drawn_card, game.pile[0], game.declared_color):
                         place_card = input(("You drew a {0} and you can place it or keep it. "
                                             "Do you want to place it? (y/n)\n").format(functions.format_card(drawn_card)))
