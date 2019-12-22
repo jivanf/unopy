@@ -17,7 +17,6 @@ class HumanPlayer(Player):
             4: "Last chance. Enter a number.\n",
         }[count]
 
-    # TODO: Add funny messages
     def __invalid_integer_input_message(self, count):
         return {
             1: "The number you selected is not within the range of your hand size.\n",

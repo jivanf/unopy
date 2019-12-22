@@ -28,7 +28,6 @@ wild_actions = ["Wild", "Draw four"]
 deck = [NormalCard(color, num) for num in range(0, 10) for color in colors]
 for i in range(1): deck += [NormalCard(color, num) for num in range(1, 10) for color in colors]
 for i in range(2): deck += [ActionCard(color, action) for action in actions for color in colors]
-for i in range(8): deck += [ActionCard(color, "Reverse") for action in actions for color in colors]
 for i in range(4): deck += [ActionCard(wild_color, wild_action) for wild_action in wild_actions]
 deck += deepcopy(deck)
 
@@ -88,7 +87,7 @@ def display_player_order(game, direction):
         message += char
         print(message.center(terminal_size.columns - 1), end="\r")
         sleep(0.1)
-    sleep(4)
+    sleep(5)
 
 clear_screen()
 
@@ -187,9 +186,8 @@ try:
                 if player.uno_calls[-2] == uno_player:
                     message += "{0} and {1}".format(uno_player, player.uno_calls[-1])
                     break
-            # TODO: fix typos
-                message += "{0}, "
-            message += "have called out UNO!"
+                message += "{0}, ".format(uno_player)
+            message += " have called out UNO!"
             
             print(message)
 
@@ -259,6 +257,7 @@ try:
                     top_card.used = True
                     continue
 
+        # TODO: decrease dash length
         print("-" * 75)
         print("TOP CARD:")
         print("-" * 75)
