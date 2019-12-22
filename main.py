@@ -193,44 +193,43 @@ try:
 
         if type(top_card) == ActionCard:
             formatted_top_card = format_card(top_card)
-            if top_card.action == "Reverse":
-                if len(game.players) == 2 and top_card.used == False:
-                    if type(player) == HumanPlayer: print(("Since this is a two player game and a "
-                                                        "{0} was used against you, " 
-                                                        "you have been skipped...").format(formatted_top_card))
-
-                    turn = return_next_turn(turn, direction, game)
-                    display_enter_message(turn, direction, game)
-                    countdown(name)
-                    clear_screen()
-
-
-                if len(game.players) != 2 and top_card.used == False:
-                    clear_screen()
-                    display_player_order(game, direction)
-                    clear_screen()
-                    print("A {0} was used so you are next!".format(format_card(top_card)))
-
-                top_card.used = True
-                continue
-
             if top_card.used == False:
+                if top_card.action == "Reverse":
+                    if len(game.players) == 2:
+                        if type(player) == HumanPlayer: print(("Since this is a two player game and a "
+                                                            "{0} was used against you, " 
+                                                            "you have been skipped...").format(formatted_top_card))
+
+                        else: print("Looks like I got skipped")
+
+                        turn = return_next_turn(turn, direction, game)
+                        display_enter_message(turn, direction, game)
+                        countdown(name)
+                        clear_screen()
+
+                    if len(game.players) != 2:
+                        print("another test")
+                        clear_screen()
+                        display_player_order(game, direction)
+                        clear_screen()
+                        print("A {0} was used so you are next!".format(format_card(top_card)))
+
                 if top_card.action == "Skip":
                     if type(player) == HumanPlayer: print("You have been skipped by a {0}!".format(formatted_top_card))
+                    else: print("I got skipped...")
 
                     turn = return_next_turn(turn, direction, game)
                     display_enter_message(turn, direction, game)
                     countdown(name)
                     clear_screen()
 
-                    top_card.used = True
-                    continue
 
                 if top_card.action == "Draw two":
                     player.draw_cards(2, game)
                     if type(player) == HumanPlayer:
                         print("Oops! You have to draw two cards thanks to a {0}".format(formatted_top_card))
                         print("You drew the cards {0}".format(", ".join([format_card(card) for card in player.hand[-2:]])))
+
                     else: print("Okay, I think I got some nice cards...")
 
                     turn = return_next_turn(turn, direction, game)
@@ -238,14 +237,13 @@ try:
                     countdown(name)
                     clear_screen()
                     
-                    top_card.used = True
-                    continue
 
                 if top_card.action == "Draw four":
                     player.draw_cards(4, game)
                     if type(player) == HumanPlayer:
                         print("Ouch! You gotta draw four cards thanks to a {0}".format(formatted_top_card))
                         print("You drew the cards {0}".format(", ".join([format_card(card) for card in player.hand[-4:]])))
+
                     else:
                         print("Okay...")
 
@@ -253,9 +251,9 @@ try:
                     display_enter_message(turn, direction, game)
                     countdown(name)
                     clear_screen()
-                    
-                    top_card.used = True
-                    continue
+
+                top_card.used = True
+                continue
 
         # TODO: decrease dash length
         print("-" * 75)
