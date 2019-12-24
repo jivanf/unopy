@@ -17,6 +17,6 @@ class Game():
 
         else:
             self.pile.append(top_card)
-
+ 
     def add_player(self, player):
         self.players.append(player)

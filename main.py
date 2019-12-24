@@ -253,7 +253,6 @@ try:
                 top_card.used = True
                 continue
 
-        # TODO: decrease dash length
         print("-" * 60)
         print("TOP CARD:")
         print("-" * 60)
@@ -269,11 +268,11 @@ try:
             else: print("I won! Woohoo! 🎉🎉")
             sys.exit()
 
-        # TODO: print only top 20 cards
         print("-" * 60)
-        print("PILE:")
+        print("PILE:" if len(game.pile) < 20 else "PILE (TOP 20 CARDS):")
         print("-" * 60)
-        for card in game.pile:
+        print(len(game.pile))
+        for card in game.pile[:20]:
             print(format_card(card))
 
         if type(player) == AIPlayer:
