@@ -72,16 +72,14 @@ def display_player_order(game, direction):
     players = game.players
     message_buffer = ""
     message = ""
+    selected_arrow = "->" if direction == 1 else "<-"
     print("\n" * ((terminal_size.lines - 1) // 2), "PLAYER ORDER".center(terminal_size.columns - 1))
     
-    if direction == -1:
-        players = list(reversed(game.players))
-
     for player in players:
         if players[-1] == player:
             message_buffer += player.name
         else:
-            message_buffer += player.name + " -> "
+            message_buffer += player.name + " {0} ".format(selected_arrow)
 
     for char in message_buffer:
         message += char
