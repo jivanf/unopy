@@ -3,7 +3,7 @@ import functions
 from random import randint
 from collections import Counter
 
-class AIPlayer(Player):
+class BotPlayer(Player):
     def __init__(self, name):
         Player.__init__(self, name)
 

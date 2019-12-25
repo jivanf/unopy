@@ -1,7 +1,7 @@
 from random import shuffle
 from game import Game
 from humanplayer import HumanPlayer
-from aiplayer import AIPlayer
+from bot_player import BotPlayer
 from action_card import ActionCard
 from normal_card import NormalCard
 from functions import format_card
@@ -111,14 +111,14 @@ try:
         ai_player_count = None 
 
         try:
-            ai_player_count = int(input("How many AI players do you want? (Up to 10 players, including human players)\n"))
+            ai_player_count = int(input("How many bots do you want? (Up to 10 players, including human players)\n"))
 
         except ValueError:
             print("{0} is not a number...\n".format(ai_player_count))
             continue
 
         if human_player_count + ai_player_count > 10:
-            print("The amount of human players and AI bots is too big.\n")
+            print("The amount of human players and bots is too big.\n")
             continue
 
         if ai_player_count < 0:
@@ -129,9 +129,13 @@ try:
             print("Do you really want to start a game with 0 players? I don't think so.\n")
             continue
 
+        elif human_player_count + ai_player_count == 1:
+            print("The game can't start with only one player!")
+            continue
+
         for i in range(0, ai_player_count):
             bot_name = "Bot{0}".format(i + 1)
-            bot_player = AIPlayer(bot_name)
+            bot_player = BotPlayer(bot_name)
             bot_player.draw_cards(7, game)
             game.add_player(bot_player)
 
@@ -274,7 +278,7 @@ try:
         for card in game.pile[:20]:
             print(format_card(card))
 
-        if type(player) == AIPlayer:
+        if type(player) == BotPlayer:
             print("-" * 60)
 
         else:
