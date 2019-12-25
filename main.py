@@ -130,7 +130,7 @@ try:
             continue
 
         elif human_player_count + ai_player_count == 1:
-            print("The game can't start with only one player!")
+            print("The game can't start with only one player!\n")
             continue
 
         for i in range(0, ai_player_count):
