@@ -271,7 +271,6 @@ try:
         print("-" * 60)
         print("PILE:" if len(game.pile) < 20 else "PILE (TOP 20 CARDS):")
         print("-" * 60)
-        print(len(game.pile))
         for card in game.pile[:20]:
             print(format_card(card))
 
