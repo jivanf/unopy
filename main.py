@@ -1,6 +1,6 @@
 from random import shuffle
 from game import Game
-from humanplayer import HumanPlayer
+from human_player import HumanPlayer
 from bot_player import BotPlayer
 from action_card import ActionCard
 from normal_card import NormalCard
