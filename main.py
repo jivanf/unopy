@@ -6,6 +6,7 @@ from action_card import ActionCard
 from normal_card import NormalCard
 from functions import format_card
 from os import system, name, get_terminal_size
+import select
 from time import sleep
 from copy import deepcopy
 if name == "nt": import msvcrt
@@ -40,19 +41,23 @@ result = None
 
 direction = 1
 
+def flush_input():
+    sys.stdout.flush()
+    if name == "nt":
+        while msvcrt.kbhit():
+            msvcrt.getch()
+    else:
+        termios.tcflush(sys.stdin, termios.TCIOFLUSH)
+
 def clear_screen():
     if name == "nt": result = system("cls")
     else: result = system("clear")
 
 def countdown(name):
-    if name == "nt":
-        while msvcrt.kbhit():
-            msvcrt.getwch()
-    else:
-        termios.tcflush(sys.stdin, termios.TCIFLUSH)
     for i in reversed(range(1, 6)):
         print("Switching to next player in {0}...".format(str(i)), end="\r")
         sleep(1)
+        flush_input()
 
 def return_next_turn(turn, direction, game):
     if turn + direction > len(game.players) - 1:
@@ -83,9 +88,10 @@ def display_player_order(game, direction):
 
     for char in message_buffer:
         message += char
-        print(message.center(terminal_size.columns - 1), end="\r")
+        print(message.center(terminal_size.columns), end="\r")
         sleep(0.1)
     sleep(5)
+    flush_input()
 
 clear_screen()
 
@@ -300,3 +306,4 @@ try:
 
 except KeyboardInterrupt:
     print("\nGoodbye!")
+
