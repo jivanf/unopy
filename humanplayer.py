@@ -12,16 +12,16 @@ class HumanPlayer(Player):
     def __non_integer_input_message(self, count):
         return {
             1: "Uh oh, that's not a number! Please try again:\n",
-            2: "Please enter the number that represents the card. The list is above.\n",
-            3: "Ok, this is not funny. Just do as I say and we can keep playing.\n",
-            4: "Last chance. Enter a number.\n",
+            2: "Please enter the number that represents the card. The list is above\n",
+            3: "Ok, this is not funny. Just do as I say and we can keep playing\n",
+            4: "Last chance. Enter a number\n",
         }[count]
 
     def __invalid_integer_input_message(self, count):
         return {
-            1: "The number you selected is not within the range of your hand size.\n",
-            2: "You need to select a number from the list, or else we can't keep playing.\n",
-            3: "Please select a valid number.\n",
+            1: "The number you selected is not within the range of your hand size\n",
+            2: "You need to select a number from the list, or else we can't keep playing\n",
+            3: "Please select a valid number\n",
             4: "Last chance. Enter a valid number\n",
         }[count]
 
@@ -42,10 +42,10 @@ class HumanPlayer(Player):
 
     def __card_cant_be_placed_message(self, count, game):
         return {
-            1: "The card you selected can't be placed. Please try placing another card.\n",
+            1: "The card you selected can't be placed. Please try placing another card\n",
             2: "You can't place this card!\n",
             3: self.__return_card_suggestions(game),
-            4: "Last chance. Enter a valid card or draw one from the deck.\n",
+            4: "Last chance. Enter a valid card or draw one from the deck\n",
         }[count]
 
     def __invalid_uno_callout_message(self, count):

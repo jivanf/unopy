@@ -38,5 +38,5 @@ def check_if_card_can_be_placed(card_to_place, card_placed, declared_color):
     if type(card_to_place) == NormalCard:
         if type(card_placed) == NormalCard:
             if card_to_place.number == card_placed.number:
-                        return True
+                return True
     return False

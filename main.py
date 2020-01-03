@@ -107,11 +107,11 @@ try:
             continue
         
         if human_player_count < 0:
-            print("The number you entered ({0}) is a negative number. I can't use those.\n".format(human_player_count))
+            print("The number you entered ({0}) is a negative number. I can't use those\n".format(human_player_count))
             continue
 
         if human_player_count > 10:
-            print("The number you entered ({0}) is too big.\n".format(human_player_count))
+            print("The number you entered ({0}) is too big\n".format(human_player_count))
             continue
 
         ai_player_count = None 
@@ -124,15 +124,15 @@ try:
             continue
 
         if human_player_count + ai_player_count > 10:
-            print("The amount of human players and bots is too big.\n")
+            print("The amount of human players and bots is too big\n")
             continue
 
         if ai_player_count < 0:
-            print("The number you entered ({0}) is a negative number. I can't use those.\n".format(human_player_count))
+            print("The number you entered ({0}) is a negative number. I can't use those\n".format(human_player_count))
             continue
 
         elif human_player_count + ai_player_count == 0:
-            print("Do you really want to start a game with 0 players? I don't think so.\n")
+            print("Do you really want to start a game with 0 players? I don't think so\n")
             continue
 
         elif human_player_count + ai_player_count == 1:
